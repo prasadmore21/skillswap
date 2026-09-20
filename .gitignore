@@ -1,0 +1,14 @@
+# Ignore user upload files
+uploads/certificates/*
+!uploads/certificates/.gitkeep
+uploads/profile_pictures/*
+!uploads/profile_pictures/.gitkeep
+
+# Ignore OS files
+Thumbs.db
+.DS_Store
+
+# Ignore local config overrides / backups
+*.bak
+*.tmp
+skillswap_backup.sql
