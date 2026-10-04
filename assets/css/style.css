@@ -1004,6 +1004,7 @@ body {
 /* Vibrant Skill Badges */
 .badge.bg-primary {
   background: linear-gradient(135deg, #3366ff 0%, #1e4de8 100%) !important;
+  color: #ffffff !important;
   box-shadow: 0 2px 8px rgba(51, 102, 255, 0.25);
   font-weight: 600;
   padding: 0.45em 0.85em;
@@ -1013,6 +1014,7 @@ body {
 
 .badge.bg-info {
   background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
   box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
   font-weight: 600;
   padding: 0.45em 0.85em;
