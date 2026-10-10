@@ -166,9 +166,18 @@ require __DIR__ . '/../includes/header.php';
                   </span>
                 </td>
                 <td class="py-3">
-                  <a href="/uploads/certificates/<?php echo clean($c['file_path']); ?>" target="_blank" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1">
-                    <i data-lucide="external-link" style="width:13px;height:13px;"></i> View Document
-                  </a>
+                  <?php 
+                  $realCertPath = __DIR__ . '/../uploads/certificates/' . $c['file_path'];
+                  if (file_exists($realCertPath)): 
+                  ?>
+                    <a href="/uploads/certificates/<?php echo clean($c['file_path']); ?>" target="_blank" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1">
+                      <i data-lucide="external-link" style="width:13px;height:13px;"></i> View Document
+                    </a>
+                  <?php else: ?>
+                    <span class="badge bg-warning-subtle text-warning border px-2 py-1 small" title="Files on Render free tier reset when server restarts/redeploys">
+                      <i data-lucide="alert-triangle" style="width:12px;height:12px;"></i> File Expired (Server Reset)
+                    </span>
+                  <?php endif; ?>
                 </td>
                 <td class="py-3">
                   <?php if ($c['status'] === 'approved'): ?>
