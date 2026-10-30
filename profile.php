@@ -74,7 +74,7 @@ require __DIR__ . '/includes/header.php';
         <!-- Avatar Wrapper -->
         <div class="position-relative d-inline-block mb-3">
           <?php if (!empty($user['profile_picture'])): ?>
-            <img src="/uploads/profile_pictures/<?php echo clean($user['profile_picture']); ?>"
+            <img src="<?php echo profilePicUrl($user['profile_picture']); ?>"
                  alt="Profile" class="ss-avatar" width="110" height="110">
           <?php else: ?>
             <div class="d-inline-flex align-items-center justify-content-center rounded-circle text-white shadow-sm"

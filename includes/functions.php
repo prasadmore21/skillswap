@@ -71,3 +71,27 @@ function getFlash() {
 function currentUserId() {
     return $_SESSION['user_id'] ?? null;
 }
+
+// --- File URL helpers (handles both old local paths and new Cloudinary URLs) ---
+
+/**
+ * Returns the correct URL for a profile picture.
+ * New uploads are full https:// Cloudinary URLs.
+ * Old uploads are local filenames → served from /uploads/profile_pictures/
+ */
+function profilePicUrl(?string $path): ?string {
+    if (empty($path)) return null;
+    if (str_starts_with($path, 'http')) return $path; // Cloudinary URL
+    return '/uploads/profile_pictures/' . htmlspecialchars($path, ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * Returns the correct URL for a certificate file.
+ * New uploads are full https:// Cloudinary URLs.
+ * Old uploads are local filenames → served from /uploads/certificates/
+ */
+function certFileUrl(?string $path): ?string {
+    if (empty($path)) return null;
+    if (str_starts_with($path, 'http')) return $path; // Cloudinary URL
+    return '/uploads/certificates/' . htmlspecialchars($path, ENT_QUOTES, 'UTF-8');
+}

@@ -156,17 +156,11 @@ require __DIR__ . '/../includes/header.php';
                   </div>
                 </div>
                 <div class="d-flex gap-2">
-                  <?php 
-                  $realCertPath = __DIR__ . '/../uploads/certificates/' . $qc['file_path'];
-                  if (file_exists($realCertPath)): 
-                  ?>
-                    <a href="/uploads/certificates/<?php echo clean($qc['file_path']); ?>" target="_blank" class="btn btn-outline-secondary btn-sm">
+                  <?php $certUrl = certFileUrl($qc['file_path']); ?>
+                  <?php if ($certUrl): ?>
+                    <a href="<?php echo $certUrl; ?>" target="_blank" class="btn btn-outline-secondary btn-sm">
                       View File
                     </a>
-                  <?php else: ?>
-                    <span class="badge bg-warning-subtle text-warning border px-2 py-1 small align-self-center">
-                      File Expired
-                    </span>
                   <?php endif; ?>
                   <a href="/admin/certificates.php" class="btn btn-primary btn-sm">
                     Review

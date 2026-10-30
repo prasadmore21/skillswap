@@ -144,17 +144,11 @@ require __DIR__ . '/includes/header.php';
                     <td>
                       <span class="fw-bold text-dark"><?php echo clean($c['skill_name']); ?></span>
                       <div class="mt-1">
-                        <?php 
-                        $realCertPath = __DIR__ . '/uploads/certificates/' . $c['file_path'];
-                        if (file_exists($realCertPath)): 
-                        ?>
-                          <a href="/uploads/certificates/<?php echo clean($c['file_path']); ?>" target="_blank" class="small text-primary text-decoration-none d-inline-flex align-items-center gap-1">
+                        <?php $certUrl = certFileUrl($c['file_path']); ?>
+                        <?php if ($certUrl): ?>
+                          <a href="<?php echo $certUrl; ?>" target="_blank" class="small text-primary text-decoration-none d-inline-flex align-items-center gap-1">
                             <i data-lucide="file" style="width: 12px; height: 12px;"></i> View Document
                           </a>
-                        <?php else: ?>
-                          <span class="small text-muted d-inline-flex align-items-center gap-1" title="Files on Render free tier reset when the server restarts/redeploys">
-                            <i data-lucide="alert-circle" style="width: 12px; height: 12px;"></i> File expired (Re-upload required)
-                          </span>
                         <?php endif; ?>
                       </div>
                     </td>

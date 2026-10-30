@@ -84,7 +84,8 @@ require __DIR__ . '/includes/header.php';
 
 function renderAvatarBadge($pic, $name) {
     if ($pic) {
-        echo '<img src="/uploads/profile_pictures/' . htmlspecialchars($pic) . '" class="ss-avatar me-3" width="54" height="54" alt="' . htmlspecialchars($name) . '">';
+        $picUrl = profilePicUrl($pic);
+        echo '<img src="' . $picUrl . '" class="ss-avatar me-3" width="54" height="54" alt="' . htmlspecialchars($name) . '">';
     } else {
         $initial = strtoupper(substr($name, 0, 1));
         echo '<div class="d-inline-flex align-items-center justify-content-center rounded-circle me-3 text-white fw-bold shadow-sm" style="width:54px;height:54px;background:linear-gradient(135deg,var(--ss-primary) 0%,var(--ss-primary-hover) 100%);font-size:1.25rem;">' . htmlspecialchars($initial) . '</div>';

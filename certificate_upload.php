@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/cloudinary.php';
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -29,8 +30,8 @@ if (empty($_FILES['certificate_file']['name'])) {
 $file = $_FILES['certificate_file'];
 $allowedTypes = [
     'application/pdf' => 'pdf',
-    'image/jpeg' => 'jpg',
-    'image/png' => 'png',
+    'image/jpeg'      => 'jpg',
+    'image/png'       => 'png',
 ];
 $maxSize = 5 * 1024 * 1024; // 5MB
 
@@ -53,20 +54,20 @@ if (!isset($allowedTypes[$detectedType])) {
     exit;
 }
 
-$ext = $allowedTypes[$detectedType];
-$newFilename = 'cert_' . $userId . '_' . $skillId . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
-$destination = __DIR__ . '/uploads/certificates/' . $newFilename;
+// Upload to Cloudinary (permanent cloud storage — survives server restarts)
+$cloudinaryUrl = uploadToCloudinary($file['tmp_name'], 'auto', 'skillswap/certificates');
 
-if (!move_uploaded_file($file['tmp_name'], $destination)) {
-    setFlash('error', 'Could not save the uploaded file. Please try again.');
+if (!$cloudinaryUrl) {
+    setFlash('error', 'Could not upload the file to cloud storage. Please try again.');
     header('Location: /certificates.php');
     exit;
 }
 
+// Store the full Cloudinary URL in the database (instead of a local filename)
 $stmt = $db->prepare(
     "INSERT INTO certificates (user_id, skill_id, file_path, status) VALUES (?, ?, ?, 'pending')"
 );
-$stmt->execute([$userId, $skillId, $newFilename]);
+$stmt->execute([$userId, $skillId, $cloudinaryUrl]);
 
 setFlash('success', 'Certificate submitted for review. An admin will verify it soon.');
 header('Location: /certificates.php');

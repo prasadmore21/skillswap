@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/cloudinary.php';
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -47,18 +48,18 @@ if (!empty($_FILES['profile_picture']['name'])) {
         exit;
     }
 
-    $ext = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/gif' => 'gif'][$detectedType];
-    $newFilename = 'user_' . $userId . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
-    $destination = __DIR__ . '/uploads/profile_pictures/' . $newFilename;
+    // Upload to Cloudinary (permanent cloud storage — survives server restarts)
+    $cloudinaryUrl = uploadToCloudinary($file['tmp_name'], 'image', 'skillswap/profiles');
 
-    if (!move_uploaded_file($file['tmp_name'], $destination)) {
-        setFlash('error', 'Could not save the uploaded picture. Please try again.');
+    if (!$cloudinaryUrl) {
+        setFlash('error', 'Could not upload profile picture to cloud storage. Please try again.');
         header('Location: /profile.php');
         exit;
     }
 
+    // Store the full Cloudinary URL instead of a local filename
     $updates[] = 'profile_picture = ?';
-    $params[] = $newFilename;
+    $params[] = $cloudinaryUrl;
 }
 
 $params[] = $userId;

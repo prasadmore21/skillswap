@@ -95,7 +95,7 @@ require __DIR__ . '/includes/header.php';
     <div class="col-12 col-lg-8">
       <div class="d-flex align-items-center gap-3">
         <?php if (!empty($user['profile_picture'])): ?>
-          <img src="/uploads/profile_pictures/<?php echo clean($user['profile_picture']); ?>"
+          <img src="<?php echo profilePicUrl($user['profile_picture']); ?>"
                alt="Profile" class="ss-avatar" width="68" height="68" style="border: 3px solid rgba(255,255,255,0.85); box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
         <?php else: ?>
           <div class="d-inline-flex align-items-center justify-content-center rounded-circle"
