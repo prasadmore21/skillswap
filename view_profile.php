@@ -24,6 +24,15 @@ $skills = $stmt->fetchAll();
 $teachSkills = array_filter($skills, fn($s) => $s['type'] === 'teach');
 $learnSkills = array_filter($skills, fn($s) => $s['type'] === 'learn');
 
+// Approved certificates of this user (visible to others)
+$stmt = $db->prepare(
+    "SELECT c.file_path, c.uploaded_at, s.skill_name FROM certificates c
+     JOIN skills s ON s.skill_id = c.skill_id
+     WHERE c.user_id = ? AND c.status = 'approved' ORDER BY c.uploaded_at DESC"
+);
+$stmt->execute([$targetId]);
+$approvedCerts = $stmt->fetchAll();
+
 $stmt = $db->prepare('SELECT AVG(rating) avg_rating, COUNT(*) total FROM ratings WHERE rated_user_id = ?');
 $stmt->execute([$targetId]);
 $ratingSummary = $stmt->fetch();
@@ -166,6 +175,46 @@ require __DIR__ . '/includes/header.php';
         <?php endif; ?>
       </div>
     </div>
+
+    <!-- Verified Certificates -->
+    <?php if (!empty($approvedCerts)): ?>
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-white py-3">
+        <div class="d-flex align-items-center gap-2">
+          <i data-lucide="award" style="width:20px;height:20px;color:var(--ss-success);"></i>
+          <span class="fw-bold">Verified Certificates</span>
+        </div>
+        <span class="badge bg-success"><?php echo count($approvedCerts); ?> verified</span>
+      </div>
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+          <?php foreach ($approvedCerts as $cert): ?>
+            <li class="list-group-item d-flex align-items-center justify-content-between px-4 py-3">
+              <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+                     style="width:38px;height:38px;background:linear-gradient(135deg,#10b981,#059669);">
+                  <i data-lucide="shield-check" style="width:18px;height:18px;color:#fff;"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold text-dark small"><?php echo clean($cert['skill_name']); ?></div>
+                  <div class="text-muted" style="font-size:0.75rem;">
+                    Verified on <?php echo clean(date('M j, Y', strtotime($cert['uploaded_at']))); ?>
+                  </div>
+                </div>
+              </div>
+              <?php $certUrl = certFileUrl($cert['file_path']); ?>
+              <?php if ($certUrl): ?>
+                <a href="<?php echo $certUrl; ?>" target="_blank"
+                   class="btn btn-outline-success btn-sm d-inline-flex align-items-center gap-1">
+                  <i data-lucide="external-link" style="width:13px;height:13px;"></i> View
+                </a>
+              <?php endif; ?>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    </div>
+    <?php endif; ?>
 
     <!-- Reviews Received -->
     <div class="card shadow-sm">
