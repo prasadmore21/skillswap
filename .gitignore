@@ -12,3 +12,21 @@ Thumbs.db
 *.bak
 *.tmp
 skillswap_backup.sql
+
+# Ignore CA certificate (downloaded at runtime)
+cacert.pem
+
+# Ignore temp/debug/import scripts
+run_import_now.php
+import_cloud_db.php
+import_cloud_db_tidb.php
+make_admin.php
+promote_admin.php
+test_render_url.php
+
+# Ignore zip archives and PDFs in root
+*.zip
+*.pdf
+
+# Ignore extracted UML images
+uml_extracted/
